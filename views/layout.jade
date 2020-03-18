@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+   block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 Examen Moons
+
+        // register form
+        form(method='POST' action='/calculate')
+          div.form-group
+            label(for='name') Entrada:
+            textarea(name="description", cols="40", rows="5")
+          button.btn.btn-primary(type='submit') Calcular
+
+          ul#slides.swiper-wrapper
+           each key in result
+             li.swiper-slide
+               p=key.name+' :'+key.number
+
+          h5= error
