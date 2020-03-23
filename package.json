@@ -21,6 +21,7 @@
     "request": "^2.81.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node app.js"
   }
 }
