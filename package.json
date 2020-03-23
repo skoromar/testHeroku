@@ -1,18 +1,26 @@
 {
-  "name": "nodejsmongodbhelloworld",
-  "version": "0.0.0",
+  "name": "Cart",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "start": "node ./bin/www"
-  },
+  "description": "Node.js shopping cart",
+  "author": "Gabriele Romanato <gabriele@gabrieleromanato.com>",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.3",
-    "express": "^4.17.1",
-    "jade": "~1.11.0",
-    "morgan": "^1.9.1",
+    "body-parser": "^1.13.2",
+    "connect-mongodb-session": "^2.3.1",
+    "ejs": "^2.3.4",
+    "express": "^4.13.1",
+    "express-session": "^1.15.2",
+    "helmet": "^3.6.1",
+    "mongoose": "^5.9.5",
     "nodemon": "^2.0.2",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "^2.4.2"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^7.1.0",
+    "request": "^2.81.0"
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }

@@ -1,41 +1,228 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+'use strict';
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const express = require('express');
+const bodyParser = require('body-parser');
+const port = process.env.PORT || 8080;
+const mongoose = require('mongoose');
+const helmet = require('helmet');
+const path = require('path');
+const favicon = require('serve-favicon');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const app = express();
+const config = require('./lib/config.js');
 
-var app = express();
+mongoose.Promise = Promise;
+mongoose.connect(config.db.url);
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+const Products = require('./models/Products');
+const Category = require('./models/Categories');
+const Vendor = require('./models/Vendor');
+const Cart = require('./lib/Cart');
+const Security = require('./lib/Security');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+const store = new MongoDBStore({
+    uri: config.db.url,
+    collection: config.db.sessions
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.disable('x-powered-by');
 
-  // render the error page
+app.set('view engine', 'ejs');
+app.set('env', 'development');
+
+app.locals.paypal = config.paypal;
+app.locals.locale = config.locale;
+
+app.use(favicon(path.join(__dirname, 'favicon.png')));
+app.use('/public', express.static(path.join(__dirname, '/public'), {
+  maxAge: 0,
+  dotfiles: 'ignore',
+  etag: false
+}));
+
+
+app.use(session({secret:'XASDASDA'}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(helmet());
+app.use(session({
+    resave: false,
+    saveUninitialized: true,
+    unset: 'destroy',
+    store: store,
+    name: config.name + '-' + Security.generateId(),
+    genid: (req) => {
+        return Security.generateId()
+    }
+}));
+
+
+
+
+app.get('/', (req,res)=>{
+	try{
+		Category.find().sort().then(categories => {
+	      console.log('categories',categories);
+	      res.render('index', {
+	          pageTitle: 'Bienvenido',
+	          categories: categories,
+	      });
+		}).catch(err => {
+		  res.status(400).send('Bad request');
+		});
+	}catch(err){
+		console.log(err);
+	}
+	
+})
+
+
+
+app.get('/category/:id', (req,res)=>{
+	var id = req.params.id;
+	console.log(id);
+	Vendor.find({category:id}).sort().then(vendors => {
+	      console.log(vendors);
+	      res.render('vendor', {
+	          pageTitle: 'Bienvenido',
+	          vendors: vendors,
+	          id: id
+	      });
+	}).catch(err => {
+	  res.status(400).send('Bad request');
+	});
+	
+})
+
+
+
+app.get('/products/:id', (req, res) => {
+
+	try{
+		var id = req.params.id;
+		console.log('id',id);
+		  if(!req.session.cart) {
+		      req.session.cart = {
+		          items: [],
+		          totals: 0.00,
+		          formattedTotals: ''
+		      };
+		  }  
+		  Products.find({vendor: id}).then(products => {
+		      let format = new Intl.NumberFormat(req.app.locals.locale.lang, {style: 'currency', currency: req.app.locals.locale.currency });
+		      products.forEach( (product) => {
+		         product.formattedPrice = format.format(product.price);
+		      });
+		      res.render('products', {
+		          pageTitle: 'Node.js Shopping Cart',
+		          products: products,
+		          nonce: Security.md5(req.sessionID + req.headers['user-agent'])
+		      });
+
+		  }).catch(err => {
+		      res.status(400).send('Bad request');
+		  });
+	}catch(err){
+		console.log(err);
+	}
+  
+
+});
+
+app.get('/cart', (req, res) => {
+    let sess = req.session;
+    let cart = (typeof sess.cart !== 'undefined') ? sess.cart : false;
+    res.render('cart', {
+        pageTitle: 'Cart',
+        cart: cart,
+        nonce: Security.md5(req.sessionID + req.headers['user-agent'])
+    });
+});
+
+app.get('/cart/remove/:id/:nonce', (req, res) => {
+   let id = req.params.id;
+   if(/^\d+$/.test(id) && Security.isValidNonce(req.params.nonce, req)) {
+       Cart.removeFromCart(parseInt(id, 10), req.session.cart);
+       res.redirect('/cart');
+   } else {
+       res.redirect('/');
+   }
+});
+
+app.get('/cart/empty/:nonce', (req, res) => {
+    if(Security.isValidNonce(req.params.nonce, req)) {
+        Cart.emptyCart(req);
+        res.redirect('/cart');
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.post('/cart', (req, res) => {
+    let qty = parseInt(req.body.qty, 10);
+    let product = parseInt(req.body.product_id, 10);
+    if(qty > 0 && Security.isValidNonce(req.body.nonce, req)) {
+        Products.findOne({product_id: product}).then(prod => {
+            let cart = (req.session.cart) ? req.session.cart : null;
+            Cart.addToCart(prod, qty, cart);
+            res.redirect('/cart');
+        }).catch(err => {
+           res.redirect('/');
+        });
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.post('/cart/update', (req, res) => {
+    let ids = req.body["product_id[]"];
+    let qtys = req.body["qty[]"];
+    if(Security.isValidNonce(req.body.nonce, req)) {
+        let cart = (req.session.cart) ? req.session.cart : null;
+        let i = (!Array.isArray(ids)) ? [ids] : ids;
+        let q = (!Array.isArray(qtys)) ? [qtys] : qtys;
+        Cart.updateCart(i, q, cart);
+        res.redirect('/cart');
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/checkout', (req, res) => {
+    let sess = req.session;
+    let cart = (typeof sess.cart !== 'undefined') ? sess.cart : false;
+    res.render('checkout', {
+        pageTitle: 'Checkout',
+        cart: cart,
+        checkoutDone: false,
+        nonce: Security.md5(req.sessionID + req.headers['user-agent'])
+    });
+});
+
+app.post('/checkout', (req, res) => {
+    let sess = req.session;
+    let cart = (typeof sess.cart !== 'undefined') ? sess.cart : false;
+    if(Security.isValidNonce(req.body.nonce, req)) {
+        res.render('checkout', {
+            pageTitle: 'Checkout',
+            cart: cart,
+            checkoutDone: true
+        });
+    } else {
+        res.redirect('/');
+    }
+});
+
+
+if (app.get('env') === 'development') {
+  app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+  });
+}
+
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.render('error');
 });
 
-module.exports = app;
+app.listen(port);
