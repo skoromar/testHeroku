@@ -22,6 +22,6 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "node app.js"
+    "start": "nodemon app.js"
   }
 }

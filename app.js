@@ -60,6 +60,7 @@ app.use(session({
 
 
 
+
 app.get('/', (req,res)=>{
 	try{
 		Category.find().sort().then(categories => {
@@ -85,7 +86,7 @@ app.get('/category/:id', (req,res)=>{
 	Vendor.find({category:id}).sort().then(vendors => {
 	      console.log(vendors);
 	      res.render('vendor', {
-	          pageTitle: 'Bienvenido',
+	          pageTitle: 'Nuestra comunidad',
 	          vendors: vendors,
 	          id: id
 	      });
@@ -115,7 +116,7 @@ app.get('/products/:id', (req, res) => {
 		         product.formattedPrice = format.format(product.price);
 		      });
 		      res.render('products', {
-		          pageTitle: 'Node.js Shopping Cart',
+		          pageTitle: 'Nuestros productos',
 		          products: products,
 		          nonce: Security.md5(req.sessionID + req.headers['user-agent'])
 		      });
@@ -133,8 +134,9 @@ app.get('/products/:id', (req, res) => {
 app.get('/cart', (req, res) => {
     let sess = req.session;
     let cart = (typeof sess.cart !== 'undefined') ? sess.cart : false;
+    console.log('cart',cart);
     res.render('cart', {
-        pageTitle: 'Cart',
+        pageTitle: 'Carrito',
         cart: cart,
         nonce: Security.md5(req.sessionID + req.headers['user-agent'])
     });
@@ -175,7 +177,49 @@ app.post('/cart', (req, res) => {
     }
 });
 
+app.get('/cart/add/:id', (req, res) => {
+    try{
+        let cart = req.session.cart;
+        let id = req.params.id;
+        for(var x in cart['items']){
+            var value = cart.items[x].qty;
+            if(cart.items[x].id == id){
+                cart.items[x].qty = value+1;
+            }
+        }
+        Cart.calculateTotals(cart);
+        res.redirect('/cart');
+    }catch(err){
+        console.log(err);
+    }
+
+});
+app.get('/cart/sub/:id', (req, res) => {
+    try{
+        let cart = req.session.cart;
+        let id = req.params.id;
+        for(var x in cart['items']){
+            var value = cart.items[x].qty;
+            if(cart.items[x].id == id){
+                cart.items[x].qty =  (value > 1) ? (value - 1) : 1;
+            }
+        }
+        Cart.calculateTotals(cart);
+        res.redirect('/cart');
+        // res.render('cart', {
+        //     pageTitle: 'Carrito',
+        //     cart: cart,
+        //     nonce: Security.md5(req.sessionID + req.headers['user-agent'])
+        // });
+    }catch(err){
+        console.log(err);
+    }
+    
+});
+
+
 app.post('/cart/update', (req, res) => {
+    
     let ids = req.body["product_id[]"];
     let qtys = req.body["qty[]"];
     if(Security.isValidNonce(req.body.nonce, req)) {

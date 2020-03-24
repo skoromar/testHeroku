@@ -2,6 +2,7 @@
 
 const Store = {
     quantity: () => {
+        console.log("hola");
         let qtyWrap = document.querySelectorAll('.qty-wrap');
         if(qtyWrap.length > 0) {
             for(let i = 0; i < qtyWrap.length; i++) {
@@ -29,3 +30,18 @@ const Store = {
 document.addEventListener('DOMContentLoaded', () => {
     Store.quantity();
 });
+
+/*let addToCartButtons = document.querySelectorAll(".qty-plus");
+
+addToCartButtons.forEach(btn => btn.addEventListener("click", (event) => {
+    event.preventDefault();
+    console.log("mira hice un evento");
+    let input = qty.querySelector('.qty');
+    let input = qty.querySelector('.qty');
+    
+    var xhttp = new XMLHttpRequest();
+    
+    xhttp.open("POST", "http://127.0.0.1:8080/cart/update", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.send(JSON.stringify({ email: username, password: password }));
+}));*/
