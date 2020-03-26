@@ -27,7 +27,7 @@
 
 // ListenController.js
 // Import salesOrder model
-salesOrder = require('../models/salesOrder');
+salesOrder = require('../models/SalesOrder');
 // Handle index actions
 exports.index = function (req, res) {
     console.log("view");
