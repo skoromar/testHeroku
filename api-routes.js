@@ -10,7 +10,7 @@ router.get('/', function (req, res) {
 
 /**********************router para controlar ordenes de venta************************/
 // Import salesOrder controller
-var salesOrderController = require('./controllers/salesOrderController');
+var salesOrderController = require('./controllers/salesorderController');
 // Contact routes
 router.route('/salesorder')
     .get(salesOrderController.index)
