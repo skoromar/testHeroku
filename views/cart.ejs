@@ -1,6 +1,9 @@
 <% include header %>
 
+
+
     <div class="w3-container cart-box">
+        <a href="/products/<%=vendorID%>" class="w3-button w3-black">Añadir más productos al carrito</a>
     <% if(cart && cart.items.length > 0) { %>
     <form action="/cart/update" method="post">
         <table class="cart-table table table-bordered table-striped">
@@ -8,7 +11,7 @@
                 <% cart.items.forEach(function(product) { %>
                 <tr>
                     <td>
-                        <a href="/cart/remove/<%= product.id%>/<%= nonce %>">
+                        <a href="/cart/remove/<%= product.id %>/<%= nonce %>">
                             <i class="fa fa-remove text-danger"></i>
                         </a>
                     </td>
@@ -60,7 +63,7 @@
         </div>
     </form>
     <% } else { %>
-    <p class="alert alert-info">Sorry, no products in your cart.</p>
+    <p class="alert alert-info">Lo sentimos, su carrito está vacío.</p>
     <% } %>
 </div>
 <% include footer %>

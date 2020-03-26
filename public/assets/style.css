@@ -105,3 +105,9 @@ td .qty {
     padding: 1em;
     border-radius: 4px;
 }
+
+.line-sep{
+    border-top: solid 1px #ddd;
+    /* margin-top: 0px; */
+    padding-top: 5px;
+}

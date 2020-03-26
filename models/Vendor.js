@@ -1,20 +1,27 @@
-'use strict';
+var mongoose = require('mongoose'),
+Schema = mongoose.Schema;
+require('mongoose-double')(mongoose);
 
-const mongoose  = require('mongoose');
-
-let Schema  = mongoose.Schema;
+const autoIncrementModelID = require('./Counter');
 
 let VendorSchema = new Schema({
-    id : String,
-	name : String,
-	internalid : Number,
-	category : String,
-	zipcode : Number,
+    id: { type: Number, unique: true, min: 1 },
+	name : {type: String},
+	category : {type: String},
+	zipcode : {type: Number},
 	description : String,
-	phone : Number,
+	phone : {type: Number},
 	activevendor : Boolean,
-	logo : String,
-	address : String
+	logo : {type: String},
+	address : {type: String}
 },{collection: 'vendor'});
 
+VendorSchema.pre('save', function (next) {
+  if (!this.isNew) {
+    next();
+    return;
+  }
+
+  autoIncrementModelID('vendor', this, next);
+});
 module.exports = mongoose.model('Vendor', VendorSchema);

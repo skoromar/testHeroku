@@ -1,19 +1,28 @@
-'use strict';
+var mongoose = require('mongoose'),
+Schema = mongoose.Schema;
+require('mongoose-double')(mongoose);
 
-const mongoose  = require('mongoose');
-
-let Schema  = mongoose.Schema;
+const autoIncrementModelID = require('./Counter');
 
 let ProductsSchema = new Schema({
     product_id: Number,
-    id: String,
-    title: String,
-    description: String,
-    manufacturer: String,
-    price: Number,
-    image: String,
-    vendor: Number,
-    category: String
+    id: { type:String},
+    title: { type:String},
+    description: { type:String},
+    manufacturer: { type:String},
+    price: { type: Number},
+    image: { type:String},
+    vendor:{ type: Number},
+    category: { type:String}
 },{collection: 'products'});
+
+ProductsSchema.pre('save', function (next) {
+  if (!this.isNew) {
+    next();
+    return;
+  }
+
+  autoIncrementModelID('products', this, next);
+});
 
 module.exports = mongoose.model('Products', ProductsSchema);

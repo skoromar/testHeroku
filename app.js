@@ -14,12 +14,15 @@ const config = require('./lib/config.js');
 
 mongoose.Promise = Promise;
 mongoose.connect(config.db.url);
+mongoose.set('useFindAndModify', false);
 
 const Products = require('./models/Products');
 const Category = require('./models/Categories');
 const Vendor = require('./models/Vendor');
 const Cart = require('./lib/Cart');
 const Security = require('./lib/Security');
+
+let apiRoutes = require("./api-routes");
 
 const store = new MongoDBStore({
     uri: config.db.url,
@@ -115,9 +118,11 @@ app.get('/products/:id', (req, res) => {
 		      products.forEach( (product) => {
 		         product.formattedPrice = format.format(product.price);
 		      });
+              req.session.vendorID = id;
 		      res.render('products', {
 		          pageTitle: 'Nuestros productos',
 		          products: products,
+                  category: id,
 		          nonce: Security.md5(req.sessionID + req.headers['user-agent'])
 		      });
 
@@ -134,18 +139,20 @@ app.get('/products/:id', (req, res) => {
 app.get('/cart', (req, res) => {
     let sess = req.session;
     let cart = (typeof sess.cart !== 'undefined') ? sess.cart : false;
+    let idvendor = req.session.vendorID;
     console.log('cart',cart);
     res.render('cart', {
         pageTitle: 'Carrito',
         cart: cart,
+        vendorID:idvendor,
         nonce: Security.md5(req.sessionID + req.headers['user-agent'])
     });
 });
 
 app.get('/cart/remove/:id/:nonce', (req, res) => {
    let id = req.params.id;
-   if(/^\d+$/.test(id) && Security.isValidNonce(req.params.nonce, req)) {
-       Cart.removeFromCart(parseInt(id, 10), req.session.cart);
+   if(id && Security.isValidNonce(req.params.nonce, req)) {
+       Cart.removeFromCart(id, req.session.cart);
        res.redirect('/cart');
    } else {
        res.redirect('/');
@@ -162,18 +169,27 @@ app.get('/cart/empty/:nonce', (req, res) => {
 });
 
 app.post('/cart', (req, res) => {
-    let qty = parseInt(req.body.qty, 10);
-    let product = parseInt(req.body.product_id, 10);
-    if(qty > 0 && Security.isValidNonce(req.body.nonce, req)) {
-        Products.findOne({product_id: product}).then(prod => {
-            let cart = (req.session.cart) ? req.session.cart : null;
-            Cart.addToCart(prod, qty, cart);
-            res.redirect('/cart');
-        }).catch(err => {
-           res.redirect('/');
-        });
-    } else {
-        res.redirect('/');
+    try{
+
+        let qty = parseInt(req.body.qty, 10);
+        let product = parseInt(req.body.product_id, 10);
+
+        console.log('qty',qty);
+        console.log('product',product);
+        if(qty > 0 && Security.isValidNonce(req.body.nonce, req)) {
+            Products.findOne({id: product}).then(prod => {
+                let cart = (req.session.cart) ? req.session.cart : null;
+                Cart.addToCart(prod, qty, cart);
+                res.redirect('/cart');
+            }).catch(err => {
+               res.redirect('/');
+            });
+        } else {
+            res.redirect('/');
+        }
+    }catch(err){
+        console.log(err);
+
     }
 });
 
@@ -257,6 +273,30 @@ app.post('/checkout', (req, res) => {
         res.redirect('/');
     }
 });
+
+app.get('/contact', (req, res) => {
+    let sess = req.session;
+    res.render('contact', {
+        pageTitle: 'Contactanos',
+        nonce: Security.md5(req.sessionID + req.headers['user-agent'])
+    });
+});
+
+app.get('/faq', (req, res) => {
+    let sess = req.session;
+    res.render('faq', {
+        pageTitle: 'Preguntas Frcuentes',
+        nonce: Security.md5(req.sessionID + req.headers['user-agent'])
+    });
+});
+
+
+app.get('/test', (req, res) => {
+    res.render('test');
+});
+
+app.use('/api', apiRoutes);
+
 
 
 if (app.get('env') === 'development') {
