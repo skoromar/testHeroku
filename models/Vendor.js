@@ -11,6 +11,7 @@ let VendorSchema = new Schema({
 	zipcode : {type: Number},
 	description : String,
 	phone : {type: Number},
+	email: {type:String},
 	activevendor : Boolean,
 	logo : {type: String},
 	address : {type: String}

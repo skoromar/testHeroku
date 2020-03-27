@@ -1,43 +1,44 @@
 <% include header%>
 
 
+<% if(status == false){ %>
   <!-- Contact section -->
   <div class="w3-container  w3-padding-32 w3-padding-large" id="contact">
     <div class="w3-content" style="max-width:600px">
       <h4 class="w3-center"><b>Contacto</b></h4>
       <p>¿Te gustaría ponerte en contacto con nosotros?</p>
-      <form action="/action_page.php" target="_blank">
-        <div class="w3-row w3-section">
+      <form action="/api/contact" method="post">
+          <div class="w3-row w3-section">
             <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
               <div class="w3-rest">
-                <input class="w3-input w3-border" name="first" type="text" placeholder="First Name">
+                <input class="w3-input w3-border" name="name" type="text" placeholder="Nombre" minlength="3" maxlength="30" required>
               </div>
           </div>
 
           <div class="w3-row w3-section">
             <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
               <div class="w3-rest">
-                <input class="w3-input w3-border" name="last" type="text" placeholder="Last Name">
+                <input class="w3-input w3-border" name="lastname" type="text" placeholder="Apellido" minlength="3" maxlength="30"  required>
               </div>
           </div>
 
           <div class="w3-row w3-section">
             <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-envelope-o"></i></div>
               <div class="w3-rest">
-                <input class="w3-input w3-border" name="email" type="text" placeholder="Email">
+                <input class="w3-input w3-border" maxlength="50"  name="email" type="email" placeholder="Correo electronico" required>
               </div>
           </div>
 
         <div class="w3-row w3-section">
           <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-phone"></i></div>
             <div class="w3-rest">
-              <input class="w3-input w3-border" name="phone" type="text" placeholder="Phone">
+              <input class="w3-input w3-border" name="phone" type="tel" pattern="[0-9]{8,10}" placeholder="Teléfono de 8 a 10 digitos" minlength="7" maxlength="12" required>
             </div>
         </div>
         <div class="w3-row w3-section">
-          <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-phone"></i></div>
+          <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-check-circle-o"></i></div>
           <div class="w3-rest">
-            <select class="w3-select" name="option">
+            <select class="w3-select" name="status">
               <option value="" disabled selected>Selecciona el motivo</option>
               <option value="1">Comentario</option>
               <option value="2">Sugerencia</option>
@@ -49,7 +50,7 @@
         <div class="w3-row w3-section">
           <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-pencil"></i></div>
             <div class="w3-rest">
-              <input class="w3-input w3-border" name="message" type="text" placeholder="Message">
+              <input class="w3-input w3-border" name="message" maxlength="300"  type="text" placeholder="Mensaje">
             </div>
         </div>
 
@@ -57,4 +58,27 @@
       </form>
     </div>
   </div>
+
+<% }else{ %>
+  <br><br>
+    <div class="w3-container  w3-padding-32 w3-padding-large" id="contact">
+    <div class="w3-content" style="max-width:600px">
+      <div class="w3-panel w3-pale-green w3-border">
+        <h3><%=titileResponse%></h3>
+        <p><%=mesaggeResponse%>.</p>
+        <p>Por favor, espere unos segundos mientas lo redireccionamos a la pagina principal</p>
+      </div>
+        
+    </div>
+  </div>
+  <script type="text/javascript">
+    
+    window.setTimeout( function(){
+         window.location = "/";
+    }, 6000 );
+  </script>
+<% } %>
+
+  
+
 <% include footer%>

@@ -4,71 +4,60 @@
 <% if(!checkoutDone) {%>
 <% if(cart && cart.items.length > 0) { %>
 
-<form action="/checkout" method="post" class="form-horizontal">
+
+<div class="card">
+<div class="w3-container w3-2018-sailor-blue">
+    <h2>Pedido</h2>
+  </div>
+<form action="/api/salesorder" method="post" class="form-horizontal">
 <div class=" w3-twothird  s-12 w3-container  w3-padding-1 w3-padding-large" id="contact">
     <div >
-            <div class="w3-row w3-section">
-            <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
-              <div class="w3-rest">
-                <input class="w3-input w3-border" name="first" type="text" placeholder="Nombre">
-              </div>
-            </div>
+            <p>      
+              <label class="w3-text-black">
+                <b><i class="fa fa-user"></i> Nombre</b>
+              </label>
+              <input class="w3-input w3-border w3-sand" name="name" type="text" maxlength="50" required>
+            </p>
+            <p>      
+              <label class="w3-text-black">
+                <b><i class="fa fa-user"></i> Apellido</b>
+              </label>
+              <input class="w3-input w3-border w3-sand" name="lastname" type="text" maxlength="50" required>
+            </p>
+            <p>      
+              <label class="w3-text-black">
+                <b><i class="fas fa-at"></i> Correo electrónico</b>
+              </label>
+              <input class="w3-input w3-border w3-sand" name="email" type="text" maxlength="50" required>
+            </p>
+            <p>      
+              <label class="w3-text-black">
+                <b><i class="fa fa fa-phone"></i> Teléfono</b>
+              </label>
+              <input class="w3-input w3-border w3-sand"  pattern="[0-9]{8,10}" name="phone" type="text" maxlength="50" required>
+            </p>
+            <p>      
+              <label class="w3-text-black">
+                <b><i class="fas fa-building"></i> Dirección de entrega</b>
+              </label>
+              <input class="w3-input w3-border w3-sand" name="shipAdrress" type="text" id="autocomplete" onFocus="geolocate()" required>
+            </p>
+            <p>      
+              <label class="w3-text-black">
+                <b><i class="fa fa-hashtag"></i> Número interior o exterior</b>
+              </label>
+              <input class="w3-input w3-border w3-sand" name="intnumber"  maxlength="20"  type="text" required>
+            </p>
+            <p>      
+              <label class="w3-text-black">
+                <b><i class="fas fa-map-marker"></i> Fecha de entrega</b>
+              </label>
+              <input class="w3-input w3-border w3-sand" name="deliveryDate" id="deliveryDate"  type="date"  required>
+            </p>    
+              <input class="w3-input w3-border w3-sand" name="zip" id="postal_code"  type="hidden" disabled="true" >
 
-            <div class="w3-row w3-section">
-            <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
-              <div class="w3-rest">
-                <input class="w3-input w3-border" name="last" type="text" placeholder="Apellido">
-              </div>
-            </div>
 
-            <div class="w3-row w3-section">
-            <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-envelope-o"></i></div>
-              <div class="w3-rest">
-                <input class="w3-input w3-border" name="email" type="text" placeholder="Email">
-              </div>
-            </div>
-            <div class="w3-row w3-section">
-            <div class="w3-col" style="width:50px"><i class="w3-xxlarge     far fa-calendar-check"></i></div>
-              <div class="w3-rest">
-                <input class="w3-input w3-border field" placeholder="Fecha de entrega" name="date"  type="date" disabled="true">
-              </div>
-            </div>
-            <div class="w3-row w3-section">
-              <div class="w3-col" style="width:50px"><i class="w3-xxlarge fas fa-building"></i></div>
-              <div class="w3-rest">
-                <input class="w3-input w3-border" name="addres" id="autocomplete" placeholder="Ingresa tu dirección" onFocus="geolocate()" type="text"/>
-              </div>
-            </div>
-
-            <div class="w3-row w3-section ">
-            <div class="w3-col" style="width:50px"><i class="w3-xxlarge fas fa-home"></i></div>
-              <div class=" w3-rest ">
-                <input class="w3-input w3-border field" name="route" id="route" type="text" placeholder="Calle" disabled="true">
-              </div>
-              
-            </div>
-            <div class="w3-row w3-section ">
-            <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-envelope-o"></i></div>
-              <div class=" w3-rest ">
-                <div class="w3-rest">
-                    <input class="w3-input w3-border field" name="number" type="text" placeholder="Numero interior">
-                  </div>
-              </div>
-            </div>
-            <div class="w3-row w3-section">
-            <div class="w3-col" style="width:50px"><i class="w3-xxlarge far fa-bookmark"></i></div>
-              <div class="w3-rest">
-                <input class="w3-input w3-border field" name="zip" id="postal_code" placeholder="Codigo Postal" type="text" disabled="true">
-              </div>
-            </div>
-            <div class="w3-row w3-section">
-            <div class="w3-col" style="width:50px"><i class="w3-xxlarge fas fa-map-marker-alt"></i></div>
-              <div class="w3-rest">
-                <input class="w3-input w3-border field" placeholder="Estado" name="country" id="country" type="text" disabled="true">
-              </div>
-            </div>
-
-            </div>
+        </div>
         </div>
             <div class="w3-third s-12 w3-container  w3-padding-0 w3-padding-large" id="contact">
                 <div  style="max-width:300px">
@@ -117,7 +106,7 @@
   
             
     </form>
-
+</div>
  <script>
 // This sample uses the Autocomplete widget to help the user select a
 // place, then it retrieves the address components associated with that
@@ -130,8 +119,6 @@
 var placeSearch, autocomplete;
 
 var componentForm = {
-  route: 'long_name',
-  country: 'long_name',
   postal_code: 'short_name'
 };
 

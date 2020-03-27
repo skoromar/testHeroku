@@ -1,0 +1,61 @@
+
+<% include header%>
+<br>
+<div class="w3-container  w3-padding-32 w3-padding-large" id="contact">
+    <div class="w3-content" style="max-width:800px">
+<div class="w3-row w3-padding w3-border">
+
+    
+	
+    <!-- About/Information menu -->
+    <div class="">
+      <!-- About Card -->
+      <div class="w3-white w3-margin">
+        <div class="w3-container w3-black">
+          <h4>Gracias por su compra</h4>
+          <p>El pedido se entregará a la dirección : <%=confirm.shipAdrress%></p>
+	 		<p>En la fecha : <%=confirm.deliveryDate.split("T")[0]   %> </p>
+        </div>
+      </div>
+      <hr>
+
+      <!-- Posts -->
+      <div class="w3-white w3-margin">
+        <div class="w3-container w3-padding w3-2018-sailor-blue">
+          <h4>Total del pedido: <%=cart.formattedTotals%> </h4>
+        </div>
+        <ul class="w3-ul w3-hoverable w3-white">
+
+        	<% cart.items.forEach(function(product) { %>
+        		<li class="w3-padding-16">
+		            <img src="/public/images/products/<%= product.image %>" alt="Image" class="w3-left w3-margin-right" style="width:50px">
+		            <span class="w3-large">Denim</span>
+		            <br>
+		            <span><%= product.qty %> x <%= product.formattedPrice %></span>
+		          </li>
+			 	
+			 <%})%>
+          
+
+
+        </ul>
+      </div>
+      <hr>
+
+      
+      <!-- Subscribe -->
+      <div class="w3-white w3-margin">
+        <div class="w3-container w3-padding w3-2018-sailor-blue">
+          <h4>Su orden ya fue recibida.</h4>
+        </div>
+        <div class="w3-container w3-white">
+          <p class="w3-text-red">El proveedor se pondra en contacto con usted para asignar la hora de entrega</p>
+      </div>
+
+    <!-- END About/Intro Menu -->
+    </div>
+
+  <!-- END GRID -->
+  </div>
+</div></div>
+    <% include footer%>

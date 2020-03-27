@@ -20,6 +20,8 @@ const Products = require('./models/Products');
 const Category = require('./models/Categories');
 const Vendor = require('./models/Vendor');
 const Cart = require('./lib/Cart');
+const Email = require('./lib/email');
+const Utils = require('./utils');
 const Security = require('./lib/Security');
 
 let apiRoutes = require("./api-routes");
@@ -277,10 +279,19 @@ app.post('/checkout', (req, res) => {
 app.get('/contact', (req, res) => {
     let sess = req.session;
     res.render('contact', {
+        status:false,
         pageTitle: 'Contactanos',
         nonce: Security.md5(req.sessionID + req.headers['user-agent'])
     });
 });
+app.get('api/contact', (req, res) => {
+    res.render('contact', {
+        status:false,
+        pageTitle: 'Contactanos'
+    });
+});
+
+
 
 app.get('/faq', (req, res) => {
     let sess = req.session;
@@ -291,7 +302,64 @@ app.get('/faq', (req, res) => {
 });
 
 
+app.get('/terms', (req, res) => {
+    let sess = req.session;
+    res.render('terms', {
+        pageTitle: 'Terminos y condiciones',
+        nonce: Security.md5(req.sessionID + req.headers['user-agent'])
+    });
+});
+
+app.get('/success', (req, res) => {
+
+    try{
+        let sess = req.session;
+        console.log(sess);
+
+        Vendor.find({id:sess.vendorID}).sort().then(vendors => {
+            console.log(vendors);
+            var html = Utils.tplCustomer(sess);
+            var obj_email = {
+                from: 'Confirmación de compra',
+                to: [sess.confirm.email,vendors.email],
+                subject: 'Confirmación de compra',
+                text: 'Orden de compra creada',
+                html: html,
+                
+            }
+
+            Email.sendEmail("",obj_email)
+            res.render('success',{
+
+                pageTitle:"hola que hace",
+                cart:sess.cart,
+                confirm: sess.confirm
+            });
+        }).catch(err => {
+          console.log("err",err);
+        });
+    }catch(err){
+        console.log("ocurrio un error con su commpra");
+    }
+    
+
+    
+});
+
+
 app.get('/test', (req, res) => {
+    var html = Utils.tplCustomer("holaaaaaa");
+
+    var obj_email = {
+        from: 'Confirmación de compra',
+        to: [sess.confirm.email,vendors.email],
+        subject: 'Confirmación de compra',
+        text: 'Orden de compra creada',
+        html: html,
+        
+    }
+
+    Email.sendEmail("",obj_email)
     res.render('test');
 });
 

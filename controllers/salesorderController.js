@@ -3,10 +3,15 @@
 {    
     "status" : 1,
     "customer" : 1,
+    "name": "name",
+    "lastname": "lastname",
+    "email":"emai@email.com",
+    "phone":"552222222",
     "zip" :11320,
     "deliveryDate" :"03/25/2020",
     "total" :2.0,
     "shipAdrress" :"primer direccion",
+    "intnumber":"intnumber",
     "shipCost" :1.0,
     "cuponcode" :"cupo",
     "discount" :0.0,
@@ -28,6 +33,10 @@
 // ListenController.js
 // Import salesOrder model
 salesOrder = require('../models/SalesOrder');
+
+const Cart = require('../lib/Cart');
+const Email = require('../lib/email');
+
 // Handle index actions
 exports.index = function (req, res) {
     console.log("view");
@@ -65,6 +74,15 @@ exports.new = function (req, res) {
                     salesOrders[x] = reqSalesOrder[x];
             }
         }
+        var cart = req.session.cart;
+        salesOrders.cart = cart;
+        salesOrders.status = 1;
+        salesOrders.total = cart.totals;
+        salesOrders.discount = 0;
+        salesOrders.customer = 1;
+
+        
+
         // save the salesOrder and check for errors
         salesOrders.save(function (err) {
             // Check for validation error
@@ -73,11 +91,14 @@ exports.new = function (req, res) {
                 res.json(err);
             }
             else{
-                res.json({
+                //Cart.emptyCart(req);
+                req.session.confirm = salesOrders ;
+                res.redirect('/success');
+                /*res.json({
                     status: "success",
                     message: "salesOrders retrieved successfully",
                     data: salesOrders
-                });
+                });*/
 
                 
             }

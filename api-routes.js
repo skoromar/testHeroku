@@ -71,5 +71,22 @@ router.route('/products/:products_id')
     .put(productsController.update)
     .delete(productsController.delete);
 
+
+
+/***************************router para controlar categorias*******************/
+
+// Import contactController controller
+var contactController = require('./controllers/contactController');
+// Contact routes
+router.route('/contact')
+    .get(contactController.index)
+    .post(contactController.new);
+
+router.route('/contact/:contact_id')
+    .get(contactController.view)
+    .patch(contactController.update)
+    .put(contactController.update)
+    .delete(contactController.delete);
+
 // Export API routes
 module.exports = router;
