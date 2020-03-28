@@ -2,7 +2,10 @@ exports.tplCustomer = function (info) {
 
 		var cart = info.cart.items;
 		console.log('my infooo',cart);
+		var d = new Date(info.confirm.deliveryDate);
 
+		var deliveryDate = d.getDate()  + "/" + (d.getMonth()+1) + "/" + d.getFullYear() 
+		console.log('my delyverydate',deliveryDate);
 
 
 
@@ -40,8 +43,6 @@ exports.tplCustomer = function (info) {
 		}
 
 
-
-		console.log(products)
 
 
 
@@ -105,7 +106,7 @@ exports.tplCustomer = function (info) {
 		+'						</td>'
 		+'						<td style="width:50%">'
 		+'							<span style="font-weight: bold;float:left">|</span>'
-		+'							Fecha: '+info.confirm.deliveryDate.split("T")[0] 
+		+'							Fecha: '+deliveryDate 
 		+'						</td>'
 		+'					</tr>'
 		+'				</table>'
