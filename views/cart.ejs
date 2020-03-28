@@ -3,7 +3,8 @@
 
 
     <div class="w3-container cart-box">
-        <a href="/products/<%=vendorID%>" class="w3-button w3-black">Añadir más productos al carrito</a>
+        <a href="/products/<%=vendorID%>" class="w3-button w3-2018-sailor-blue">Añadir más productos al carrito</a>
+        
     <% if(cart && cart.items.length > 0) { %>
     <form action="/cart/update" method="post">
         <table class="cart-table table table-bordered table-striped">
@@ -16,7 +17,7 @@
                         </a>
                     </td>
                     <td class="product-thumb">
-                        <img src="/public/images/products/<%= product.image %>" alt="" class="img-thumbnail img-responsive">
+                        <img src="/public/images/products/<%= product.image %>" alt="" class=" img-responsive">
                     </td>
                     <td><%= product.title %></td>
                     <td>
@@ -58,8 +59,9 @@
         <div class="clearfix cart-footer">
             <input type="hidden" name="nonce" value="<%= nonce %>">
             <!-- <button type="submit" class="btn btn-default pull-left"><i class="fa fa-refresh"></i> Modificar</button> -->
-            <a href="/cart/empty/<%= nonce %>" class="btn btn-default pull-left"><i class="fa fa-remove"></i> Vaciar carrito</a>
-            <a href="/checkout" class="btn btn-default pull-right">Terminar compra <i class="fa fa-angle-right"></i></a>
+            <!-- <a href="/cart/empty/<%= nonce %>" class="btn btn-primary pull-left"><i class="fa fa-remove"></i> Vaciar carrito</a> -->
+            <a href="/checkout" class="btn btn-danger pull-right">Terminar compra <i class="fa fa-angle-right"></i></a>
+
         </div>
     </form>
     <% } else { %>

@@ -1,95 +1,58 @@
 
 <!DOCTYPE html>
 <html lang="en">
+<head>
 <title>Tienda</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<style>
-body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-.white-style img{margin-bottom: 0px; cursor: pointer}
-.white-style img:hover{opacity: 0.6; transition: 0.3s}
 
-.mySlides {display:none}
-.w3-left, .w3-right, .w3-badge {cursor:pointer}
-.w3-badge {height:13px;width:13px;padding:0}
-.max-size-banner{
-  max-width: 100% !important;
-    max-height: 330px !important;
-}
-.mySlides{
-  height: 330px;
-    width: 100%;
-}
-a{
-    text-decoration: none!important;
-    
-}
-.centered {
-  text-align: center;
-  padding: 7px;
-  background-color: #fff;
-  border: 1px solid #f1f1f1;
-}
-.centered > a{
-  font-size: 21px!important;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.cart-component{
-  margin-top: 120px;
-}
-.cart-box{
-  margin-top: 120px;
-}
-
-@media only screen and (max-width: 600px) {
-  .mySlides{
-    height: 220px;
-    width: 100%;
-    padding: 0px;
-    margin: 0px;
-  }
-}
-.w3-top{
-  border-bottom: 1px solid #ddd;
-}
-.w3-card{
-  box-shadow: none !important;
-}
 </style>
  <meta name='viewport' content='width=device-width, initial-scale=1'>
 <script src='https://kit.fontawesome.com/a076d05399.js'></script>
  <link rel="stylesheet" href="/public/assets/style.css" type="text/css" media="screen" />
  <link rel="stylesheet" href="/public/assets/colors.css" type="text/css" media="screen" />
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+ </head> 
 <body class="">
 
 
-<!-- Navbar (sit on top) -->
-<div class="w3-top">
-  <div class="w3-bar w3-white w3-card" id="myNavbar">
-    <a href="/" class="w3-bar-item w3-button w3-wide w3-text-red">Bienvendio</a>
-    <!-- Right-sided navbar links -->
-    <div class="w3-right w3-hide-small">
-      <a href="/faq" class="w3-bar-item w3-button w3-text-red"><i class="fa fa-user"></i> FAQ</a>
-      <a href="/contact" class="w3-bar-item w3-button w3-text-red"><i class="fa fa-envelope"></i> Contactanos</a>
+
+
+
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="/">Bienvendio</a>
     </div>
-    <!-- Hide right-floated links on small screens and replace them with a menu icon -->
-
-    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
-      <i class="fa fa-bars"></i>
-    </a>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#pricing">PRODUCTOS</a></li>
+        <li><a href="#services">CALIDAD</a></li>
+        <li><a href="#about">SOBRE NOSOTROS</a></li>
+      </ul>
+    </div>
   </div>
-</div>
-
+</nav>
 <!-- Sidebar on small screens when clicking the menu icon -->
-<nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
+<!-- <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16 ">Cerrar ×</a>
   <a href="/faq" onclick="w3_close()" class="w3-bar-item w3-button w3-text-red">FAQ</a>
   <a href="/contact" onclick="w3_close()" class="w3-bar-item w3-button w3-text-red">CONTACT</a>
-</nav>
+</nav> -->
 
 
 
@@ -109,24 +72,6 @@ function w3_open() {
 function w3_close() {
     mySidebar.style.display = "none";
 }
-// Script to open and close sidebar
-// function w3_open() {
-//   document.getElementById("mySidebar").style.display = "block";
-//   document.getElementById("myOverlay").style.display = "block";
-// }
-
-// function w3_close() {
-//   document.getElementById("mySidebar").style.display = "none";
-//   document.getElementById("myOverlay").style.display = "none";
-// }
-
-// Modal Image Gallery
-// function onClick(element) {
-//   document.getElementById("img01").src = element.src;
-//   document.getElementById("modal01").style.display = "block";
-//   var captionText = document.getElementById("caption");
-//   captionText.innerHTML = element.alt;
-// }
 
 </script>
 

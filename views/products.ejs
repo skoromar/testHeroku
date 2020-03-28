@@ -4,6 +4,7 @@
 
 <% if(products && products.length > 0) { %>
 <div class="w3-container  cart-component">
+  <a class="btn w3-2018-harbor-mist" href="/category/<%=category%>" role="button">Ver más provedores</a>
 <% var i = 0; products.forEach(function(product) { i++; %>
     <form action="/cart" method="post">
     <div class="w3-col l4 s12">
@@ -12,10 +13,11 @@
           <img src="/public/images/products/<%= product.image %>" style="width:100%">
           <!-- <span class="w3-tag w3-display-topleft">New</span> -->
           <div class="w3-display-middle w3-display-hover">
-            <button class="w3-button w3-black">Comprar ahora <i class="fa fa-shopping-cart"></i></button>
+            
           </div>
         </div>
         <p><%= product.title %><br><b class="price"><%= product.formattedPrice %></b></p>
+        <button class="w3-button w3-2018-sailor-blue">Agregar al carrito<i class="fa fa-shopping-cart"></i></button>
         <!-- <span class="qty-wrap">
             <span class="qty-minus"><i class="fa fa-minus"></i></span>
             <input type="hidden" name="qty" class="qty" value="1">
@@ -37,8 +39,6 @@
 <% } %>
 
 
-<div class="w3-container w3-text-grey" id="jeans">
-    <p>8 items</p>
-  </div>
+
 
 <% include footer %>

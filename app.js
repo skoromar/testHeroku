@@ -315,29 +315,13 @@ app.get('/success', (req, res) => {
     try{
         let sess = req.session;
         console.log(sess);
+        res.render('success',{
 
-        Vendor.find({id:sess.vendorID}).sort().then(vendors => {
-            console.log(vendors);
-            var html = Utils.tplCustomer(sess);
-            var obj_email = {
-                from: 'Confirmación de compra',
-                to: [sess.confirm.email,vendors.email],
-                subject: 'Confirmación de compra',
-                text: 'Orden de compra creada',
-                html: html,
-                
-            }
-
-            Email.sendEmail("",obj_email)
-            res.render('success',{
-
-                pageTitle:"hola que hace",
-                cart:sess.cart,
-                confirm: sess.confirm
-            });
-        }).catch(err => {
-          console.log("err",err);
+            pageTitle:"hola que hace",
+            cart:sess.cart,
+            confirm: sess.confirm
         });
+        
     }catch(err){
         console.log("ocurrio un error con su commpra");
     }
@@ -347,19 +331,17 @@ app.get('/success', (req, res) => {
 });
 
 
+app.get('/admincreatorfNWmlHUQBd',(req,res)=>{
+
+    res.render('admincreatorskor');
+
+    
+
+});
+
+
 app.get('/test', (req, res) => {
-    var html = Utils.tplCustomer("holaaaaaa");
-
-    var obj_email = {
-        from: 'Confirmación de compra',
-        to: [sess.confirm.email,vendors.email],
-        subject: 'Confirmación de compra',
-        text: 'Orden de compra creada',
-        html: html,
-        
-    }
-
-    Email.sendEmail("",obj_email)
+    
     res.render('test');
 });
 

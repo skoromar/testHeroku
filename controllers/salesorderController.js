@@ -36,7 +36,8 @@ salesOrder = require('../models/SalesOrder');
 
 const Cart = require('../lib/Cart');
 const Email = require('../lib/email');
-
+const Vendor = require('../models/Vendor');
+const Utils = require('../utils');
 // Handle index actions
 exports.index = function (req, res) {
     console.log("view");
@@ -93,6 +94,24 @@ exports.new = function (req, res) {
             else{
                 //Cart.emptyCart(req);
                 req.session.confirm = salesOrders ;
+                let sess = req.session;
+                Vendor.find({id:sess.vendorID}).sort().then(vendors => {
+                    console.log(vendors);
+                    var html = Utils.tplCustomer(sess);
+                    var obj_email = {
+                        from: 'Confirmación de compra',
+                        to: [sess.confirm.email,vendors.email],
+                        subject: 'Confirmación de compra',
+                        text: 'Orden de compra creada',
+                        html: html,
+                        
+                    }
+
+                    Email.sendEmail("",obj_email)
+                    
+                }).catch(err => {
+                  console.log("err",err);
+                });
                 res.redirect('/success');
                 /*res.json({
                     status: "success",

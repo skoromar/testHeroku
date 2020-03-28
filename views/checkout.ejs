@@ -6,10 +6,10 @@
 
 
 <div class="card">
-<div class="w3-container w3-2018-sailor-blue">
-    <h2>Pedido</h2>
+<div class="w3-container card-edited-m">
+    <h2 class="card-edited-m">Pedido</h2>
   </div>
-<form action="/api/salesorder" method="post" class="form-horizontal">
+<form action="/api/salesorder" method="post" class="form-horizontal" >
 <div class=" w3-twothird  s-12 w3-container  w3-padding-1 w3-padding-large" id="contact">
     <div >
             <p>      
@@ -34,7 +34,7 @@
               <label class="w3-text-black">
                 <b><i class="fa fa fa-phone"></i> Teléfono</b>
               </label>
-              <input class="w3-input w3-border w3-sand"  pattern="[0-9]{8,10}" name="phone" type="text" maxlength="50" required>
+              <input class="w3-input w3-border w3-sand"  pattern="[0-9]{8,10}" name="phone" type="text" maxlength="10" required>
             </p>
             <p>      
               <label class="w3-text-black">
@@ -44,7 +44,7 @@
             </p>
             <p>      
               <label class="w3-text-black">
-                <b><i class="fa fa-hashtag"></i> Número interior o exterior</b>
+                <b><i class="fa fa-hashtag"></i> Número interior y/o exterior</b>
               </label>
               <input class="w3-input w3-border w3-sand" name="intnumber"  maxlength="20"  type="text" required>
             </p>
@@ -116,6 +116,9 @@
 // <script
 // src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
+
+
+ 
 var placeSearch, autocomplete;
 
 var componentForm = {

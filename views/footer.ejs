@@ -1,12 +1,49 @@
- <footer class="w3-container w3-padding-32 w3-black">  
-    <div class="w3-row-padding">
-      <div class="w3-seconnd">
-        <h3>Sistema de pedidos en linea</h3>
-        <a href="/terms">Teminos y condiciones</a>      
-      </div>
-    
-    </div>
-  </footer>
+
+<footer class="container-fluid text-center">
+  <a href="#myPage" title="To Top">
+    <span class="glyphicon glyphicon-chevron-up"></span>
+  </a>
+  <p>Preguntas Frecuentes<a href="/faq" > FAQ</a></p>
+  <p>Quieres ponerte en contacto con nostros<a href="/contact" > CONTACTO</a></p>
+  <p>Conoce nuestros terminos <a href="/terms" >TERMINOS</a></p>
+</footer>
+
+<script>
+$(document).ready(function(){
+  // Add smooth scrolling to all links in navbar + footer link
+  $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 900, function(){
+   
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+  
+  $(window).scroll(function() {
+    $(".slideanim").each(function(){
+      var pos = $(this).offset().top;
+
+      var winTop = $(window).scrollTop();
+        if (pos < winTop + 600) {
+          $(this).addClass("slide");
+        }
+    });
+  });
+})
+</script>
 <script type="text/javascript" src="/public/assets/store.js"></script>
 </body>
 </html>

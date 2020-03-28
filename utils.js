@@ -136,7 +136,7 @@ exports.tplCustomer = function (info) {
 		+'					</tr>'
 		+'					<tr>'
 		+'						<td width="50%" style="vertical-align: top">'
-		+'							Dirección: '+info.confirm.shipAdrress
+		+'							Dirección: '+info.confirm.shipAdrress +' -Numero:  '+info.confirm.intnumber
 		+'						</td>'
 		+'					</tr>'
 		+'				</table>'
