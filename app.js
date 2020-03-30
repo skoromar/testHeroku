@@ -400,10 +400,11 @@ app.get('/updateVendors',(req,res)=>{
 });
 
 
-app.get('/skoradminultramegapro',(req,res)=>{
-   Vendor.find().sort().then(products => {
-        res.render('admincreatorskor',{
-            vendor:veendor,
+app.get('/skorCoKlDRJBLNanmGQx',(req,res)=>{
+    console.log("vendro admin");
+   Vendor.find().sort().then(veendor => {
+        res.render('admincreatorvedor',{
+            vendors:veendor,
         });
     }).catch(err => {
       res.status(400).send('Bad request');

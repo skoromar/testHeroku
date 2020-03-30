@@ -134,7 +134,7 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
     console.log(req.body)
     console.log(req.params)
-    products. deleteOne({
+    products.deleteOne({
         _id: req.params.products_id
     }, function (err, products) {
         if (err)

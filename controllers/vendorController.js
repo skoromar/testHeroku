@@ -26,11 +26,7 @@ exports.index = function (req, res) {
         }
 
 
-        res.json({
-            status: "success",
-            message: "vendors retrieved successfully",
-            data: vendors
-        });
+        res.redirect('/skorCoKlDRJBLNanmGQx')
     });
 };
 // Handle create vendor actions
@@ -81,28 +77,33 @@ exports.view = function (req, res) {
 };
 // Handle update vendor info
 exports.update = function (req, res) {
-    vendor.findById(req.params.listen_id, function (err, vendors) {
+
+    console.log('update',req.body);
+    console.log('update--',req.params);
+    vendor.findById(req.params.vendor_id, function (err, vendors) {
         if (err)
             res.send(err);
-        vendors.name = req.body.name ? req.body.name : vendors.name;
-        vendors.gender = req.body.gender;
-        vendors.email = req.body.email;
-        vendors.phone = req.body.phone;
+        var reqvendor = req.body;
+        for(var x in reqvendor){
+            if(reqvendor[x] != ""){
+                vendors[x] = reqvendor[x]; 
+            }
+            
+        }
+
+
 // save the vendor and check for errors
         vendors.save(function (err) {
             if (err)
                 res.json(err);
-            res.json({
-                message: 'vendor Info updated',
-                data: vendors
-            });
+             res.redirect('/skorCoKlDRJBLNanmGQx')
         });
     });
 };
 // Handle delete Listen
 exports.delete = function (req, res) {
-    vendor.remove({
-        _id: req.params.listen_id
+    vendor.deleteOne({
+        _id: req.params.vendor_id
     }, function (err, vendor) {
         if (err)
             res.send(err);

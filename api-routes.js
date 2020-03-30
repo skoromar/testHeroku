@@ -36,10 +36,12 @@ var vendorController = require('./controllers/vendorController');
 router.route('/vendor')
     .get(vendorController.index)
     .post(vendorController.new);
+router.route('/updatevendor/:vendor_id')
+    .post(vendorController.update);
 
-router.route('/salesOrder/:vendor_id')
+
+router.route('/vendor/:vendor_id')
     .get(vendorController.view)
-    .patch(vendorController.update)
     .put(vendorController.update)
     .delete(vendorController.delete);
 
