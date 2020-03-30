@@ -1,4 +1,8 @@
 let router = require('express').Router();
+
+
+const fileUpload = require('express-fileupload');
+
 // Set default API response
 router.get('/', function (req, res) {
     res.json({
@@ -64,11 +68,12 @@ var productsController = require('./controllers/productController');
 router.route('/products')
     .get(productsController.index)
     .post(productsController.new);
+router.route('/updateproducts/:products_id')
+    .post(productsController.update);
 
 router.route('/products/:products_id')
     .get(productsController.view)
     .patch(productsController.update)
-    .put(productsController.update)
     .delete(productsController.delete);
 
 

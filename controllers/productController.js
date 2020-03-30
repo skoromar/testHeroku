@@ -1,18 +1,23 @@
 /*{ 
-    "name" : "Tamales Magos", 
-    "category" : "1", 
-    "description" : "Tamales Artesanalaes", 
-    "zipcode" : "11320", 
-    "address" : "addrs1", 
-    "phone" : "5529022732", 
-    "activeproducts" : true, 
-    "logo" : "logo1.jpg"
+    
+    title : "Clickart 950 000 - Premier image pack (dvd-rom)", 
+    description : "Clickart 950 000 - Premier image pack (dvd-rom)", 
+    manufacturer : "Broderbund", 
+    price : 100.0, 
+    image : "6.jpeg", 
+    category : 1.0, 
+    vendor : 1.0, 
+    subcategory : 1.0
 }*/
 
 
 // ListenController.js
 // Import products model
 products = require('../models/Products');
+
+const Vendor = require('../models/Vendor');
+const Products = require('../models/Products');
+fileUpload = require('express-fileupload');
 // Handle index actions
 exports.index = function (req, res) {
     console.log("view");
@@ -33,31 +38,36 @@ exports.index = function (req, res) {
         });
     });
 };
+
 // Handle create products actions
 exports.new = function (req, res) {
     console.log("create",req.body);
 
     try{
+
+        //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+        let avatar = req.files.fileUploaded;
         var productss = new products();
         var reqproducts = req.body;
+        var vendor_folder = req.body.vendor;
+        var key = req.body.key;
+        delete reqproducts.key;
         for(var x in reqproducts){
             productss[x] = reqproducts[x];
         }
+        productss['image'] = avatar.name;
         // save the products and check for errors
         productss.save(function (err) {
             // Check for validation error
             if (err){
                 console.log("view err",err);
                 res.json(err);
-            }
-            else{
-                res.json({
-                    status: "success",
-                    message: "productss retrieved successfully",
-                    data: productss
-                });
+            } else{
+                //Use the mv() method to place the file in upload directory (i.e. "uploads")
+                avatar.mv('./public/images/products/vendor'+vendor_folder+'/'+ avatar.name);
 
-                
+                res.redirect('/'+key)
+
             }
         });
     }catch(error){
@@ -81,28 +91,51 @@ exports.view = function (req, res) {
 };
 // Handle update products info
 exports.update = function (req, res) {
-    products.findById(req.params.listen_id, function (err, productss) {
-        if (err)
-            res.send(err);
-        productss.name = req.body.name ? req.body.name : productss.name;
-        productss.gender = req.body.gender;
-        productss.email = req.body.email;
-        productss.phone = req.body.phone;
-// save the products and check for errors
-        productss.save(function (err) {
+    console.log('update',req.body);
+    console.log('update--',req.params);
+
+    try{
+        products.findById(req.params.products_id, function (err, productss) {
             if (err)
-                res.json(err);
-            res.json({
-                message: 'products Info updated',
-                data: productss
+                res.send(err);
+
+            var reqproducts = req.body;
+            var vendor_folder = req.body.vendor;
+            var key = req.body.key;
+            delete reqproducts.key;
+
+            if(req.files){
+
+                let avatar = req.files.fileUploaded;
+                productss['image'] = avatar.name;
+                avatar.mv('./public/images/products/vendor'+vendor_folder+'/'+ avatar.name);
+                console.log("file true",avatar);
+            }
+            for(var x in reqproducts){
+                if(reqproducts[x] != ""){
+                    productss[x] = reqproducts[x]; 
+                }
+                
+            }
+            
+    // save the products and check for errors
+            productss.save(function (err) {
+                if (err)
+                    res.json(err);
+                res.redirect('/'+key)
             });
         });
-    });
+    }catch(err){
+        console.log("err",err);
+    }
+    
 };
 // Handle delete Listen
 exports.delete = function (req, res) {
-    products.remove({
-        _id: req.params.listen_id
+    console.log(req.body)
+    console.log(req.params)
+    products. deleteOne({
+        _id: req.params.products_id
     }, function (err, products) {
         if (err)
             res.send(err);

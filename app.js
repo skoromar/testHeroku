@@ -11,6 +11,8 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const app = express();
 const config = require('./lib/config.js');
+const busboy = require('connect-busboy');
+var fs = require('fs-extra'); 
 
 mongoose.Promise = Promise;
 mongoose.connect(config.db.url);
@@ -19,11 +21,16 @@ mongoose.set('useFindAndModify', false);
 const Products = require('./models/Products');
 const Category = require('./models/Categories');
 const Vendor = require('./models/Vendor');
+const KeyVendor = require('./models/KeyVendor');
 const Cart = require('./lib/Cart');
 const Email = require('./lib/email');
 const Utils = require('./utils');
 const Security = require('./lib/Security');
 
+const fileUpload = require('express-fileupload');
+app.use(fileUpload({
+    createParentPath: true
+}));
 let apiRoutes = require("./api-routes");
 
 const store = new MongoDBStore({
@@ -38,7 +45,7 @@ app.set('env', 'development');
 
 app.locals.paypal = config.paypal;
 app.locals.locale = config.locale;
-
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'favicon.png')));
 app.use('/public', express.static(path.join(__dirname, '/public'), {
   maxAge: 0,
@@ -114,23 +121,29 @@ app.get('/products/:id', (req, res) => {
 		          totals: 0.00,
 		          formattedTotals: ''
 		      };
-		  }  
-		  Products.find({vendor: id}).then(products => {
-		      let format = new Intl.NumberFormat(req.app.locals.locale.lang, {style: 'currency', currency: req.app.locals.locale.currency });
-		      products.forEach( (product) => {
-		         product.formattedPrice = format.format(product.price);
-		      });
-              req.session.vendorID = id;
-		      res.render('products', {
-		          pageTitle: 'Nuestros productos',
-		          products: products,
+		  } 
+          Vendor.findOne({id: id}).then(veendor => {
+            console.log('veendor',veendor);
+            Products.find({vendor: id}).then(products => {
+                let format = new Intl.NumberFormat(req.app.locals.locale.lang, {style: 'currency', currency: req.app.locals.locale.currency });
+                products.forEach( (product) => {
+                 product.formattedPrice = format.format(product.price);
+                });
+                req.session.vendorID = id;
+                res.render('products', {
+                  pageTitle: 'Nuestros productos',
+                  products: products,
                   category: id,
-		          nonce: Security.md5(req.sessionID + req.headers['user-agent'])
-		      });
+                  veendor: veendor,
+                  nonce: Security.md5(req.sessionID + req.headers['user-agent'])
+                });
 
-		  }).catch(err => {
-		      res.status(400).send('Bad request');
-		  });
+            }).catch(err => {
+              res.status(400).send('Bad request');
+            });
+        }).catch(err => {
+              res.status(400).send('Bad request');
+        });
 	}catch(err){
 		console.log(err);
 	}
@@ -331,14 +344,103 @@ app.get('/success', (req, res) => {
 });
 
 
-app.get('/admincreatorfNWmlHUQBd',(req,res)=>{
+function createRouteVendor(){
+    try{
+        KeyVendor.find().sort().then(keys => {
+            console.log('keys',keys.length);
+            let stringkey= "";
+            var config_route ={};
+            for(var x= 0; x < keys.length; x++){
 
-    res.render('admincreatorskor');
+            config_route[keys[x].key]= keys[x].id;
+                if((x+1) != keys.length){
+                    stringkey+=keys[x].key+'|';
+                }else{
+                    stringkey+=keys[x].key
+                }
+                
 
+            }
+            app.get('/:name('+stringkey+')?', function(req, res) {
+                var name = req.params.name;
+                Vendor.findOne({id: config_route[name]}).then(veendor => {
+                    console.log('veendor',veendor);
+                    Products.find({vendor:config_route[name]}).sort().then(products => {
+                        console.log('products',products);
+                        res.render('admincreatorskor',{
+                            vendorid: config_route[name],
+                            products: products||[],
+                            vendor:veendor,
+                            key:name
+                        });
+
+                    }).catch(err => {
+                      res.status(400).send('Bad request');
+                    });
+                }).catch(err => {
+                  res.status(400).send('Bad request');
+                });
+                
+            });
+        }).catch(err => {
+          res.status(400).send('Bad request');
+        });
+    }catch(err){
+        console.log("error creat key routes",err)
+    }
     
 
+}
+
+createRouteVendor();
+
+app.get('/updateVendors',(req,res)=>{
+    createRouteVendor();
+    res.json({"update":true})
 });
 
+
+app.get('/skoradminultramegapro',(req,res)=>{
+   Vendor.find().sort().then(products => {
+        res.render('admincreatorskor',{
+            vendor:veendor,
+        });
+    }).catch(err => {
+      res.status(400).send('Bad request');
+    });
+});
+
+// app.post('/upload',(req, res) =>{
+//     console.log("request");
+//     try {
+//         if(!req.files) {
+//             res.send({
+//                 status: false,
+//                 message: 'No file uploaded'
+//             });
+//         } else {
+//             //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+//             let avatar = req.files.fileUploaded;
+//             //Use the mv() method to place the file in upload directory (i.e. "uploads")
+//             avatar.mv('./public/' + avatar.name);
+
+//             //send response
+//             res.send({
+//                 status: true,
+//                 message: 'File is uploaded',
+//                 data: {
+//                     name: avatar.name,
+//                     mimetype: avatar.mimetype,
+//                     size: avatar.size
+//                 }
+//             });
+//         }
+//     } catch (err) {
+//         console.log(err)
+//         res.status(500).send(err);
+//     }
+    
+// });
 
 app.get('/test', (req, res) => {
     

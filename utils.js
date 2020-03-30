@@ -19,7 +19,7 @@ exports.tplCustomer = function (info) {
 		products+='					<table cellspacing="0" width="100%">'
 		products+='						<tr>'
 		products+='							<td style="border-right: #e3dddf 1px solid; text-align: center;">'
-		products+='									<img style="width: 80%;min-width: 50px" src="/public/images/products/'+cart[x].image+'">'
+		products+='									<p>'+cart[x].title+' </p>'
 		products+='							</td>'
 		products+='							<td>'
 		products+='								<table cellspacing="0" width="100%">'
