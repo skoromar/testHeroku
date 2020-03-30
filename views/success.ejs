@@ -13,7 +13,7 @@
       <div class="w3-white w3-margin">
         <div class="w3-container ">
           <h2>Gracias por su compra</h2>
-          <p>El pedido se entregará a la dirección : <%=confirm.shipAdrress%></p>
+          <p>El pedido  <strong>SO00-<%=confirm.id %></strong> se entregará a la dirección : <%=confirm.shipAdrress%></p>
 	 		<p>En la fecha : <%=confirm.deliveryDate.split("T")[0]   %> </p>
         </div>
       </div>
@@ -28,10 +28,8 @@
 
         	<% cart.items.forEach(function(product) { %>
         		<li class="w3-padding-16">
-		            <img src="/public/images/products/<%= product.image %>" alt="Image" class="w3-left w3-margin-right" style="width:50px">
-		            <span class="w3-large">Denim</span>
-		            <br>
-		            <span><%= product.qty %> x <%= product.formattedPrice %></span>
+		            <h4 class="w3-large"><strong><%= product.title %></strong> | <span><%= product.qty %> x <%= product.formattedPrice %></span></h4>
+		            
 		          </li>
 			 	
 			 <%})%>
