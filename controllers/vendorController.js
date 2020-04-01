@@ -13,6 +13,7 @@
 // ListenController.js
 // Import vendor model
 vendor = require('../models/Vendor');
+const KeyVendor = require('../models/KeyVendor');
 // Handle index actions
 exports.index = function (req, res) {
     console.log("view");
@@ -35,6 +36,7 @@ exports.new = function (req, res) {
 
     try{
         var vendors = new vendor();
+        var keyvendor = new KeyVendor();
         var reqvendor = req.body;
         for(var x in reqvendor){
             vendors[x] = reqvendor[x];
@@ -47,12 +49,19 @@ exports.new = function (req, res) {
                 res.json(err);
             }
             else{
-                res.json({
-                    status: "success",
-                    message: "vendors retrieved successfully",
-                    data: vendors
+                var randomstring = Math.random().toString(36).slice(-8);
+                keyvendor.name = req.body.name;
+                keyvendor.id = vendors.id;
+                keyvendor.key = randomstring;
+                keyvendor.save(function (err) {
+                    if (err){
+                        console.log("view err",err);
+                        res.json(err);
+                    }
+                    else{
+                            res.redirect('/skorCoKlDRJBLNanmGQx')
+                    }
                 });
-
                 
             }
         });

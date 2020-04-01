@@ -343,16 +343,16 @@ app.get('/success', (req, res) => {
     
 });
 
-
+//crea url dinamicas por clave de  provedores al crearlos
 function createRouteVendor(){
     try{
-        KeyVendor.find().sort().then(keys => {
+        KeyVendor.find().then(keys => {
             console.log('keys',keys.length);
             let stringkey= "";
             var config_route ={};
+            //crea el objeto de claves por proveedor
             for(var x= 0; x < keys.length; x++){
-
-            config_route[keys[x].key]= keys[x].id;
+                config_route[keys[x].key]= keys[x].id;
                 if((x+1) != keys.length){
                     stringkey+=keys[x].key+'|';
                 }else{
@@ -361,9 +361,11 @@ function createRouteVendor(){
                 
 
             }
+            //habilita las url de administracion de productos por proveedor
             app.get('/:name('+stringkey+')?', function(req, res) {
                 var name = req.params.name;
-                Vendor.findOne({id: config_route[name]}).then(veendor => {
+                console.log('config_route[name]',config_route[name]);
+                Vendor.findOne({id: parseInt(config_route[name])}).then(veendor => {
                     console.log('veendor',veendor);
                     Products.find({vendor:config_route[name]}).sort().then(products => {
                         console.log('products',products);
@@ -387,6 +389,7 @@ function createRouteVendor(){
         });
     }catch(err){
         console.log("error creat key routes",err)
+        res.status(400).send('Bad request');
     }
     
 
@@ -396,10 +399,10 @@ createRouteVendor();
 
 app.get('/updateVendors',(req,res)=>{
     createRouteVendor();
-    res.json({"update":true})
+    res.redirect('/skorCoKlDRJBLNanmGQx')
 });
 
-
+//administrador de proveedores
 app.get('/skorCoKlDRJBLNanmGQx',(req,res)=>{
     console.log("vendro admin");
    Vendor.find().sort().then(veendor => {
@@ -411,37 +414,7 @@ app.get('/skorCoKlDRJBLNanmGQx',(req,res)=>{
     });
 });
 
-// app.post('/upload',(req, res) =>{
-//     console.log("request");
-//     try {
-//         if(!req.files) {
-//             res.send({
-//                 status: false,
-//                 message: 'No file uploaded'
-//             });
-//         } else {
-//             //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
-//             let avatar = req.files.fileUploaded;
-//             //Use the mv() method to place the file in upload directory (i.e. "uploads")
-//             avatar.mv('./public/' + avatar.name);
 
-//             //send response
-//             res.send({
-//                 status: true,
-//                 message: 'File is uploaded',
-//                 data: {
-//                     name: avatar.name,
-//                     mimetype: avatar.mimetype,
-//                     size: avatar.size
-//                 }
-//             });
-//         }
-//     } catch (err) {
-//         console.log(err)
-//         res.status(500).send(err);
-//     }
-    
-// });
 
 app.get('/test', (req, res) => {
     
